@@ -1,0 +1,28 @@
+{
+  "name": "karma-git-http-server-middleware",
+  "version": "1.0.0",
+  "description": "A karma middleware for 'git-http-backend'",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isomorphic-git/karma-git-http-server-middleware.git"
+  },
+  "keywords": [
+    "karma-plugin",
+    "karma-middleware",
+    "git-http-server",
+    "git-http-backend"
+  ],
+  "author": "William Hilton <wmhilton@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/isomorphic-git/karma-git-http-server-middleware/issues"
+  },
+  "homepage": "https://github.com/isomorphic-git/karma-git-http-server-middleware#readme",
+  "dependencies": {
+    "git-http-backend": "^1.0.2"
+  }
+}
