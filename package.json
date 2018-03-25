@@ -4,11 +4,11 @@
   "description": "A karma middleware for 'git-http-backend'",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/isomorphic-git/karma-git-http-server-middleware.git"
+    "url": "https://github.com/isomorphic-git/karma-git-http-server-middleware.git"
   },
   "keywords": [
     "karma-plugin",
