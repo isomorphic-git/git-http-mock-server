@@ -1,10 +1,12 @@
 {
   "name": "karma-git-http-server-middleware",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "A karma middleware for 'git-http-backend'",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests\""
+    "test": "echo \"No tests\"",
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "repository": {
     "type": "git",
@@ -24,5 +26,9 @@
   "homepage": "https://github.com/isomorphic-git/karma-git-http-server-middleware#readme",
   "dependencies": {
     "git-http-backend": "^1.0.2"
+  },
+  "devDependencies": {
+    "semantic-release": "^15.1.4",
+    "travis-deploy-once": "^4.4.1"
   }
 }
