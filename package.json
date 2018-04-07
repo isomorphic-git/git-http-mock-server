@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/isomorphic-git/karma-git-http-server-middleware#readme",
   "dependencies": {
+    "fixturez": "^1.1.0",
     "git-http-backend": "^1.0.2"
   },
   "devDependencies": {
