@@ -2,7 +2,5 @@
   "extends": [
     "config:base"
   ],
-  "packageRules": [{
-    "schedule": "on friday"
-  }]
+  "schedule": "on friday"
 }
