@@ -4,7 +4,8 @@
   "description": "Clone and push to git repository test fixtures over HTTP.",
   "main": "index.js",
   "bin": {
-    "git-http-mock-server": "daemon.js"
+    "git-http-mock-server": "daemon.js",
+    "git-ssh-mock-server": "ssh-server.js"
   },
   "scripts": {
     "test": "echo \"No tests\"",
@@ -29,6 +30,7 @@
   "homepage": "https://github.com/isomorphic-git/git-http-mock-server#readme",
   "dependencies": {
     "basic-auth": "^2.0.0",
+    "buffer-equal-constant-time": "^1.0.1",
     "chalk": "^2.4.1",
     "daemonize-process": "^1.0.9",
     "fixturez": "^1.1.0",
@@ -36,7 +38,9 @@
     "htpasswd-js": "^1.0.2",
     "micro-cors": "^0.1.1",
     "minimisted": "^2.0.0",
-    "tree-kill": "^1.2.0"
+    "tree-kill": "^1.2.0",
+    "ssh-keygen": "^0.4.2",
+    "ssh2": "^0.6.1"
   },
   "devDependencies": {
     "semantic-release": "15.1.7",
