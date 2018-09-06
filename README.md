@@ -4,12 +4,17 @@ Clone and push to git repository test fixtures over HTTP.
 
 ## What it does
 
-Given a directory of bare git repositories, `git-http-mock-server` will serve those repositories using the
+It is similar to [`git-http-server`](https://npm.im/git-http-server) but designed for test cases only.
+It uses copy-on-write so that pushing to the repo doesn't actually alter the repo.
+
+Run in a directory full of bare git repositories, `git-http-mock-server` will serve those repos using the
 native `git-http-backend` process built into `git` (which needs to be installed on the machine).
-You can then run tests that clone or push to git repositories (regardless of whether Github is down)
-and you can run those tests in parallel without them interfering with each other.
-(It uses copy-on-write so that pushing to the repo doesn't actually alter the repo.)
-Because it uses `git-http-backend` git hooks (such as `hooks/update` and `hooks/post-receive`) are automatically supported.
+
+You can then:
+- run tests that clone or push to those git repositories (regardless of whether Github is down :wink:).
+- run those tests in parallel without them interfering with each other.
+
+Git hooks such as `hooks/update` and `hooks/post-receive` are automatically supported.
 
 It also supports HTTP Basic Auth password protection of repos so you can test how your code handles 401 errors.
 
@@ -29,9 +34,9 @@ test-repo1.git    test-repo2.git   imaginatively-named-repo.git
 > git-http-mock-server
 ```
 
-Now clone away...
+Now clone and push away...
 ```sh
-> git clone https://localhost:8174/imaginatively-named-repo.git
+> git clone http://localhost:8174/imaginatively-named-repo.git
 ```
 
 ### Environment Variables
