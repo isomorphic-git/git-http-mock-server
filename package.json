@@ -1,8 +1,11 @@
 {
-  "name": "karma-git-http-server-middleware",
+  "name": "git-http-mock-server",
   "version": "0.0.0-development",
-  "description": "A karma middleware for 'git-http-backend'",
+  "description": "Clone and push to git repository test fixtures over HTTP.",
   "main": "index.js",
+  "bin": {
+    "git-http-mock-server": "bin.js"
+  },
   "scripts": {
     "test": "echo \"No tests\"",
     "semantic-release": "semantic-release",
@@ -10,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/isomorphic-git/karma-git-http-server-middleware.git"
+    "url": "https://github.com/isomorphic-git/git-http-mock-server.git"
   },
   "keywords": [
     "karma-plugin",
@@ -21,12 +24,15 @@
   "author": "William Hilton <wmhilton@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/isomorphic-git/karma-git-http-server-middleware/issues"
+    "url": "https://github.com/isomorphic-git/git-http-mock-server/issues"
   },
-  "homepage": "https://github.com/isomorphic-git/karma-git-http-server-middleware#readme",
+  "homepage": "https://github.com/isomorphic-git/git-http-mock-server#readme",
   "dependencies": {
+    "basic-auth": "^2.0.0",
+    "chalk": "^2.4.1",
     "fixturez": "^1.1.0",
-    "git-http-backend": "^1.0.2"
+    "git-http-backend": "^1.0.2",
+    "htpasswd-js": "^1.0.2"
   },
   "devDependencies": {
     "semantic-release": "15.1.7",

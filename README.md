@@ -1,36 +1,69 @@
-# karma-git-http-server-middleware 
+# git-http-mock-server
 
-A karma middleware for '[git-http-backend](https://github.com/substack/git-http-backend)',
-originally inspired by '[git-http-server](https://github.com/bahamas10/node-git-http-server)'
+Clone and push to git repository test fixtures over HTTP.
+
+## What it does
+
+Given a directory of bare git repositories, `git-http-mock-server` will serve those repositories using the
+native `git-http-backend` process built into `git` (which needs to be installed on the machine).
+You can then run tests that clone or push to git repositories (regardless of whether Github is down)
+and you can run those tests in parallel without them interfering with each other.
+(It uses copy-on-write so that pushing to the repo doesn't actually alter the repo.)
+Because it uses `git-http-backend` git hooks (such as `hooks/update` and `hooks/post-receive`) are automatically supported.
+
+It also supports HTTP Basic Auth password protection of repos so you can test how your code handles 401 errors.
 
 ## How to use
 
 ```sh
-npm install --save-dev karma-git-http-server-middleware
+npm install --save-dev git-http-mock-server
 ```
 
-In your `karma.config.js`, add:
+Now `cd` to a directory in which you have some bare git repos
+and run this server:
 
+```sh
+> cd __fixtures__
+> ls
+test-repo1.git    test-repo2.git   imaginatively-named-repo.git
+> git-http-mock-server
 ```
-    beforeMiddleware: ['git-http-server'],
-    gitHttpServer: {
-      root: '__tests__/__fixtures__',
-      route: 'git-server'
-    },
+
+Now clone away...
+```sh
+> git clone https://localhost:8174/imaginatively-named-repo.git
 ```
 
-Then in your JS code, you can reference git repos on disk via `http://localhost:9876/git-server/name-of-repo.git`.
+### Environment Variables
 
-This is useful for testing `isomorphic-git` and applications built using it.
+- `GIT_HTTP_MOCK_SERVER_PORT` default is 8174 (to be compatible with [git-http-server](https://github.com/bahamas10/node-git-http-server))
+- `GIT_HTTP_MOCK_SERVER_ROUTE` default is `/`
+- `GIT_HTTP_MOCK_SERVER_ROOT` default is `process.cwd()`
 
-## Examples
+### .htpasswd support
 
-See <https://github.com/isomorphic-git/isomorphic-git/tree/master/__tests__>
+You can place an Apache-style `.htpasswd` file in a bare repo to protect it with Basic Authentication.
+
+```sh
+> cd __fixtures__/test-repo1.git
+> htpasswd -cb .htpasswd testuser testpassword
+Adding password for user testuser.
+> cat .htpasswd
+testuser:$apr1$BRdvH4Mu$3HrpeyBrWiS88GcSPidgq/
+```
+
+If you don't have `htpasswd` on your machine, you can use [htpasswd](https://npm.im/htpasswd) which is
+a cross-platform Node implementation of `htpasswd`.
 
 ## Dependencies
 
-- [fixturez](https://github.com/thejameskyle/fixturez): Easily create and maintain test fixtures in the file system
-- [git-http-backend](https://github.com/substack/git-http-backend): serve a git repository over http
+- [basic-auth](https://ghub.io/basic-auth): node.js basic auth parser
+- [chalk](https://ghub.io/chalk): Terminal string styling done right
+- [fixturez](https://ghub.io/fixturez): Easily create and maintain test fixtures in the file system
+- [git-http-backend](https://ghub.io/git-http-backend): serve a git repository over http
+- [htpasswd-js](https://ghub.io/htpasswd-js): Pure JS htpasswd authentication
+
+originally inspired by '[git-http-server](https://github.com/bahamas10/node-git-http-server)'
 
 ## License
 
@@ -39,5 +72,3 @@ MIT
 ## Changelog
 
 1.0.0 - Initial release
-
-2.0.0 - Copy repo on push (so repo stays untouched)
