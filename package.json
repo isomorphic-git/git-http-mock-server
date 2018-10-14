@@ -4,7 +4,7 @@
   "description": "Clone and push to git repository test fixtures over HTTP.",
   "main": "index.js",
   "bin": {
-    "git-http-mock-server": "bin.js"
+    "git-http-mock-server": "daemon.js"
   },
   "scripts": {
     "test": "echo \"No tests\"",
@@ -30,9 +30,13 @@
   "dependencies": {
     "basic-auth": "^2.0.0",
     "chalk": "^2.4.1",
+    "daemonize-process": "^1.0.9",
     "fixturez": "^1.1.0",
     "git-http-backend": "^1.0.2",
-    "htpasswd-js": "^1.0.2"
+    "htpasswd-js": "^1.0.2",
+    "micro-cors": "^0.1.1",
+    "minimisted": "^2.0.0",
+    "tree-kill": "^1.2.0"
   },
   "devDependencies": {
     "semantic-release": "15.1.7",

@@ -9,6 +9,10 @@ var fixturez = require('fixturez')
 var backend = require('git-http-backend')
 var htpasswd = require('htpasswd-js')
 
+function pad (str) {
+  return (str + '    ').slice(0, 7)
+}
+
 function factory (config) {
   if (!config.root) throw new Error('Missing required "gitHttpServer.root" config option')
   if (!config.route) throw new Error('Missing required "gitHttpServer.route" config option')
@@ -39,13 +43,20 @@ function factory (config) {
   }
 
   return async function middleware (req, res, next) {
+    // handle pre-flight OPTIONS
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 204
+      res.end('')
+      console.log(chalk.green('[git-http-server] 204 ' + pad(req.method) + ' ' + req.url))
+      return
+    }
     if (!next) next = () => void(0)
     try {
       var gitdir = getGitDir(req)
     } catch (err) {
       res.statusCode = 404
       res.end(err.message + '\n')
-      console.log(chalk.red('[git-http-server] 404 ' + req.url))
+      console.log(chalk.red('[git-http-server] 404 ' + pad(req.method) + ' ' + req.url))
       return
     }
     if (gitdir == null) return next()
@@ -63,9 +74,12 @@ function factory (config) {
       let cred = auth.parse(req.headers['authorization'])
       if (cred === undefined) {
         res.statusCode = 401
+        // The default reason phrase used in Node is "Unauthorized", but
+        // we will use "Authorization Required" to match what Github uses.
+        res.statusMessage = 'Authorization Required'
         res.setHeader('WWW-Authenticate', 'Basic')
         res.end('Unauthorized' + '\n')
-        console.log(chalk.red('[git-http-server] 401 ' + req.url))
+        console.log(chalk.green('[git-http-server] 401 ' + pad(req.method) + ' ' + req.url))
         return
       }
       let valid = await htpasswd.authenticate({
@@ -75,9 +89,12 @@ function factory (config) {
       })
       if (!valid) {
         res.statusCode = 401
+        // The default reason phrase used in Node is "Unauthorized", but
+        // we will use "Authorization Required" to match what Github uses.
+        res.statusMessage = 'Authorization Required'
         res.setHeader('WWW-Authenticate', 'Basic')
         res.end('Bad credentials' + '\n')
-        console.log(chalk.red('[git-http-server] 401 ' + req.url))
+        console.log(chalk.green('[git-http-server] 401 ' + pad(req.method) + ' ' + req.url))
         return
       }
     }
@@ -86,12 +103,12 @@ function factory (config) {
       if (err) {
         res.statusCode = 500
         res.end(err + '\n')
-        console.log(chalk.red('[git-http-server] 500 ' + req.url))
+        console.log(chalk.red('[git-http-server] 500 ' + pad(req.method) + ' ' + req.url))
         return
       }
 
       res.setHeader('content-type', service.type)
-      console.log(chalk.green('[git-http-server] 200 ' + req.url))
+      console.log(chalk.green('[git-http-server] 200 ' + pad(req.method) + ' ' + req.url))
       // console.log('[git-http-server] ' + service.cmd + ' ' + service.args.concat(gitdir).join(' '))
       var ps = spawn(service.cmd, service.args.concat(gitdir))
       ps.stdout.pipe(service.createStream()).pipe(ps.stdin)

@@ -18,14 +18,15 @@ Git hooks such as `hooks/update` and `hooks/post-receive` are automatically supp
 
 It also supports HTTP Basic Auth password protection of repos so you can test how your code handles 401 errors.
 
+Using `isomorphic-git` and testing things from browsers? Fear not, `git-http-mock-server` includes appropriate CORS headers.
+
 ## How to use
 
 ```sh
 npm install --save-dev git-http-mock-server
 ```
 
-Now `cd` to a directory in which you have some bare git repos
-and run this server:
+Now `cd` to a directory in which you have some bare git repos and run this server:
 
 ```sh
 > cd __fixtures__
@@ -34,16 +35,33 @@ test-repo1.git    test-repo2.git   imaginatively-named-repo.git
 > git-http-mock-server
 ```
 
-Now clone and push away...
+Now in another shell, clone and push away...
 ```sh
+> git clone http://localhost:8174/test-repo1.git
+> git clone http://localhost:8174/test-repo2.git
 > git clone http://localhost:8174/imaginatively-named-repo.git
 ```
+
+## Run in the background
+
+If you want to reuse the same shell (as part of a shell script, for example)
+you can run the server as a daemon in the background:
+
+```sh
+> git-http-mock-server start
+> # do stuff
+> git-http-mock-server stop
+```
+
+Just be sure to run `start` and `stop` from the same working directory.
+(The `start` command writes the PID of the server to `./git-http-mock-server.pid` so that the `stop` command knows what process to kill.)
 
 ### Environment Variables
 
 - `GIT_HTTP_MOCK_SERVER_PORT` default is 8174 (to be compatible with [git-http-server](https://github.com/bahamas10/node-git-http-server))
 - `GIT_HTTP_MOCK_SERVER_ROUTE` default is `/`
 - `GIT_HTTP_MOCK_SERVER_ROOT` default is `process.cwd()`
+- `GIT_HTTP_MOCK_SERVER_ALLOW_ORIGIN` default is `*` (used for CORS)
 
 ### .htpasswd support
 
