@@ -1,4 +1,6 @@
 # git-http-mock-server
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fisomorphic-git%2Fgit-http-mock-server.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fisomorphic-git%2Fgit-http-mock-server?ref=badge_shield)
+
 
 Clone and push to git repository test fixtures over HTTP.
 
@@ -91,6 +93,9 @@ originally inspired by '[git-http-server](https://github.com/bahamas10/node-git-
 ## License
 
 MIT
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fisomorphic-git%2Fgit-http-mock-server.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fisomorphic-git%2Fgit-http-mock-server?ref=badge_large)
 
 ## Changelog
 
