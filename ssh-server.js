@@ -3,7 +3,6 @@ const { spawn, spawnSync } = require('child_process')
 var crypto = require('crypto')
 var fs = require('fs')
 var path = require('path')
-var inspect = require('util').inspect
 
 var buffersEqual = require('buffer-equal-constant-time')
 var fixturez = require('fixturez')
@@ -21,38 +20,55 @@ new Promise((resolve, reject) => {
     let pubKey = fs.readFileSync(path.join(__dirname, 'id_rsa.pub'))
     return resolve({key, pubKey})
   } catch (err) {
-    let proc = spawnSync('ssh-keygen', ['-C', '"git-ssh-mock-server@localhost"', '-N', '""', '-f', 'id_rsa'], {
-      cwd: __dirname,
-      shell: true
-    })
-    console.log(proc.stdout.toString('utf8'))
-    let key = fs.readFileSync(path.join(__dirname, 'id_rsa'))
-    let pubKey = fs.readFileSync(path.join(__dirname, 'id_rsa.pub'))
-    return resolve({key, pubKey})
+    try {
+      // Note: PEM is to workaround https://github.com/mscdex/ssh2/issues/746
+      let proc = spawnSync('ssh-keygen', ['-m', 'PEM', '-C', '"git-ssh-mock-server@localhost"', '-N', '""', '-f', 'id_rsa'], {
+        cwd: __dirname,
+        shell: true
+      })
+      console.log(proc.stdout.toString('utf8'))
+      let key = fs.readFileSync(path.join(__dirname, 'id_rsa'))
+      let pubKey = fs.readFileSync(path.join(__dirname, 'id_rsa.pub'))
+      return resolve({key, pubKey})
+    } catch (err) {
+      reject(err)
+    }
   }
 })
 .then(keypair => {
+  if (process.argv[2] === 'exportKeys') {
+    fs.writeFileSync(path.join(process.cwd(), 'id_rsa'), keypair.key, { mode: 0o600, flag: 'wx' })
+    fs.writeFileSync(path.join(process.cwd(), 'id_rsa.pub'), keypair.pubKey, { mode: 0o600, flag: 'wx' })
+    process.exit()
+  }
   var pubKey = ssh2.utils.genPublicKey(ssh2.utils.parseKey(keypair.pubKey))
   var f = fixturez(config.root, {root: process.cwd(), glob: config.glob})
 
+  const PASSWORD_BUFFER = Buffer.from(process.env.GIT_SSH_MOCK_SERVER_PASSWORD || '')
+
   new ssh2.Server({ hostKeys: [keypair.key] }, function (client) {
     console.log('client connected')
-
     client
       .on('authentication', function (ctx) {
         if (
-          ctx.method === 'password' &&
-          // Note: Don't do this in production code, see
-          // https://www.brendanlong.com/timing-attacks-and-usernames.html
-          // In node v6.0.0+, you can use `crypto.timingSafeEqual()` to safely
-          // compare two values.
-          ctx.username === 'foo' &&
-          ctx.password === 'bar'
-        ) { ctx.accept() } else if (
-          ctx.method === 'publickey' &&
-          ctx.key.algo === pubKey.fulltype &&
-          buffersEqual(ctx.key.data, pubKey.public)
-        ) {
+            ctx.method === 'none' &&
+            !process.env.GIT_SSH_MOCK_SERVER_PASSWORD &&
+            !process.env.GIT_SSH_MOCK_SERVER_PUBKEY
+          ) {
+          ctx.accept()
+        } else if (
+            ctx.method === 'password' &&
+            process.env.GIT_SSH_MOCK_SERVER_PASSWORD &&
+            // After much thought... screw usernames.
+            buffersEqual(Buffer.from(ctx.password || ''), PASSWORD_BUFFER)
+          ) {
+          ctx.accept()
+        } else if (
+            ctx.method === 'publickey' &&
+            ctx.key.algo === pubKey.fulltype &&
+            process.env.GIT_SSH_MOCK_SERVER_PUBKEY &&
+            buffersEqual(ctx.key.data, pubKey.public)
+          ) {
           if (ctx.signature) {
             var verifier = crypto.createVerify(ctx.sigAlgo)
             verifier.update(ctx.blob)
@@ -63,7 +79,9 @@ new Promise((resolve, reject) => {
             // the validity of the given public key
             ctx.accept()
           }
-        } else ctx.reject()
+        } else {
+          ctx.reject()
+        }
       })
       .on('ready', function () {
         console.log('client authenticated')
@@ -75,6 +93,7 @@ new Promise((resolve, reject) => {
             let [_, command, gitdir] = info.command.match(/^([a-z-]+) '(.*)'/)
             // Only allow these two commands to be executed
             if (command !== 'git-upload-pack' && command !== 'git-receive-pack') {
+              console.log('invalid command:', command)
               return reject()
             }
             if (gitdir !== path.posix.normalize(gitdir)) {
@@ -111,11 +130,10 @@ new Promise((resolve, reject) => {
         })
       })
       .on('end', function () {
-        console.log('Client disconnected')
+        console.log('client disconnected')
       })
     }
   ).listen(process.env.GIT_SSH_MOCK_SERVER_PORT || 2222, '127.0.0.1', function () {
     console.log('Listening on port ' + this.address().port)
   })
-
 })
