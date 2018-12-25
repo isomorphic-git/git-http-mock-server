@@ -39,8 +39,7 @@ Now `cd` to a directory in which you have some bare git repos and run this serve
 > cd __fixtures__
 > ls
 test-repo1.git    test-repo2.git   imaginatively-named-repo.git
-> git-http-mock-server &
-> git-ssh-mock-server &
+> git-http-mock-server
 ```
 
 Now in another shell, clone and push away...
@@ -48,6 +47,19 @@ Now in another shell, clone and push away...
 > git clone http://localhost:8174/test-repo1.git
 > git clone http://localhost:8174/test-repo2.git
 > git clone http://localhost:8174/imaginatively-named-repo.git
+```
+
+To do the same thing but with SSH
+
+```sh
+> cd __fixtures__
+> ls
+test-repo1.git    test-repo2.git   imaginatively-named-repo.git
+> git-ssh-mock-server
+```
+
+Now in another shell,
+```sh
 > git clone ssh://localhost:2222/imaginatively-named-repo.git
 ```
 
@@ -64,6 +76,14 @@ you can run the server as a daemon in the background:
 
 Just be sure to run `start` and `stop` from the same working directory.
 (The `start` command writes the PID of the server to `./git-http-mock-server.pid` so that the `stop` command knows what process to kill.)
+
+Same thing for SSH:
+
+```sh
+> git-ssh-mock-server start
+> # do stuff
+> git-ssh-mock-server stop
+```
 
 ### Environment Variables
 
@@ -123,9 +143,10 @@ originally inspired by '[git-http-server](https://github.com/bahamas10/node-git-
 
 MIT
 
-
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fisomorphic-git%2Fgit-http-mock-server.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fisomorphic-git%2Fgit-http-mock-server?ref=badge_large)
 
 ## Changelog
 
+1.2.0 - add SSH server
+1.1.0 - support running in background and CORS headers
 1.0.0 - Initial release
