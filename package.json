@@ -38,9 +38,12 @@
     "htpasswd-js": "^1.0.2",
     "micro-cors": "^0.1.1",
     "minimisted": "^2.0.0",
-    "tree-kill": "^1.2.0",
+    "on-finished": "^2.3.0",
+    "serve-static": "^1.13.2",
     "ssh-keygen": "^0.4.2",
-    "ssh2": "^0.6.1"
+    "ssh2": "^0.6.1",
+    "stack": "^0.1.0",
+    "tree-kill": "^1.2.0"
   },
   "devDependencies": {
     "semantic-release": "15.1.7",
