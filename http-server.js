@@ -8,6 +8,7 @@ var static = require('serve-static')
 
 var cors = require('./cors')
 var logger = require('./logger')
+var mock = require('./mock-response')
 var factory = require('./middleware')
 
 var config = {
@@ -20,6 +21,8 @@ var server = http.createServer(
   cors(
     stack(
       logger.log(),
+      logger.handler('x-mock-response'),
+      mock(),
       logger.handler('git-http-server'),
       factory(config),
       logger.handler('serve-static'),
