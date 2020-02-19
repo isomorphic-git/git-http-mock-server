@@ -14,6 +14,7 @@ const allowHeaders = [
   'range',
   'referer',
   'user-agent',
+  'x-authorization',
   'x-http-method-override',
   'x-requested-with',
 ]
@@ -33,6 +34,7 @@ const exposeHeaders = [
   'transfer-encoding',
   'vary',
   'x-github-request-id',
+  'x-redirected-url',
 ]
 const allowMethods = [
   'POST',
