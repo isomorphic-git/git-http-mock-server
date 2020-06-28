@@ -107,10 +107,12 @@ function factory (config) {
         return
       }
 
+      const env = req.headers['git-protocol'] ? { GIT_PROTOCOL: req.headers['git-protocol'] } : {}
+
       res.setHeader('content-type', service.type)
       console.log(chalk.green('[git-http-server] 200 ' + pad(req.method) + ' ' + req.url))
       // console.log('[git-http-server] ' + service.cmd + ' ' + service.args.concat(gitdir).join(' '))
-      var ps = spawn(service.cmd, service.args.concat(gitdir))
+      var ps = spawn(service.cmd, service.args.concat(gitdir), { env })
       ps.stdout.pipe(service.createStream()).pipe(ps.stdin)
     })).pipe(res)
   }
