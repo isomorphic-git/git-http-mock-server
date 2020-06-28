@@ -22,7 +22,7 @@ jobs:
     condition: and(succeededOrFailed(), ne(variables['system.pullrequest.isfork'], true))
     inputs:
       artifactName: 'npm-tarball.tgz'
-      PathtoPublish: '$(System.DefaultWorkingDirectory)/isomorphic-git-git-http-mock-server-0.0.0-development.tgz'
+      PathtoPublish: '$(System.DefaultWorkingDirectory)/git-http-mock-server-0.0.0-development.tgz'
 
   - script: npm run semantic-release
     displayName: 'Publish to npm'
