@@ -1,6 +1,6 @@
 {
   "name": "git-http-mock-server",
-  "version": "1.2.1",
+  "version": "0.0.0-development",
   "description": "Clone and push to git repository test fixtures over HTTP.",
   "main": "index.js",
   "bin": {
@@ -43,7 +43,7 @@
     "ssh2": "^0.6.1"
   },
   "devDependencies": {
-    "semantic-release": "15.1.7",
+    "semantic-release": "16.0.3",
     "travis-deploy-once": "4.4.1"
   }
 }
