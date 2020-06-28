@@ -1,6 +1,6 @@
 {
   "name": "git-http-mock-server",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "description": "Clone and push to git repository test fixtures over HTTP.",
   "main": "index.js",
   "bin": {
