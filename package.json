@@ -34,7 +34,6 @@
     "chalk": "^2.4.1",
     "daemonize-process": "^1.0.9",
     "fixturez": "^1.1.0",
-    "git-http-backend": "^1.0.2",
     "htpasswd-js": "^1.0.2",
     "micro-cors": "^0.1.1",
     "minimisted": "^2.0.0",
