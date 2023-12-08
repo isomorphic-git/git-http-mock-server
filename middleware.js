@@ -60,7 +60,7 @@ function factory (config) {
       if (service === 'git-receive-pack') {
         let gitdir = u.pathname.replace(config.route, '').replace(/\/git-receive-pack$/, '').replace(/^\//, '')
         let fixtureName = path.posix.basename(gitdir)
-        return f.copy(fixtureName)
+        return config.persistChanges ? f.find(fixtureName) :f.copy(fixtureName)
       }
     }
     return null

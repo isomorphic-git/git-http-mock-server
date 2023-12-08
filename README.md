@@ -96,6 +96,7 @@ Same thing for SSH:
 - `GIT_SSH_MOCK_SERVER_ROOT` default is `process.cwd()`
 - `GIT_SSH_MOCK_SERVER_PASSWORD` activate Password Authentication and use this password (leave blank to allow anonymous SSH access.)
 - `GIT_SSH_MOCK_SERVER_PUBKEY` activate PubKey Authentication using the self-generated keypair (leave blank to allow anonymous SSH access.)
+- `GIT_HTTP_MOCK_SERVER_PERSIST_CHANGES` set to 'yes' to disable copy-on-write and write changes to the filesystem
 
 ### .htpasswd support (http-only)
 
