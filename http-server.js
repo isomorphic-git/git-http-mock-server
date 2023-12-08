@@ -8,7 +8,8 @@ var cors = require('./cors')
 var config = {
   root: path.resolve(process.cwd(), process.env.GIT_HTTP_MOCK_SERVER_ROOT || '.'),
   glob: '*',
-  route: process.env.GIT_HTTP_MOCK_SERVER_ROUTE || '/'
+  route: process.env.GIT_HTTP_MOCK_SERVER_ROUTE || '/',
+  persistChanges: process.env.GIT_HTTP_MOCK_SERVER_PERSIST_CHANGES === 'yes' || false,
 }
 
 var server = http.createServer(cors(factory(config)))
